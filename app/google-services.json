@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "845914585296",
+    "project_id": "virtual-try-on-5cd96",
+    "storage_bucket": "virtual-try-on-5cd96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845914585296:android:c87625261df87aa24906d5",
+        "android_client_info": {
+          "package_name": "com.example.virtualtryon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAr4Yqw0R1Y_l3GXo20rfncsCdFhKQLLuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
