@@ -81,6 +81,12 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
+  //  implementation("com.android.volley:volley:1.2.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+
 
 
 }

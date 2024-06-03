@@ -39,12 +39,12 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
+ * Use the [ClothUploadForAdmin.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment() {
+class ClothUploadForAdmin : Fragment() {
+    // TODO: Rename and change types of parameters
 
-    private lateinit var pickButton: Button
     private lateinit var pickButtonnew: Button
     private lateinit var btnCamera: Button
     private lateinit var imgGallery: ImageView
@@ -55,12 +55,13 @@ class HomeFragment : Fragment() {
     private val Gallery_REQ_CODE = 1000
     private val PICK_AN_IMAGE_REQUEST = 444
     private val CAMERA_REQUEST_CODE = 1001
+    private var isAdmin: Boolean = false
+
 
 
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var uploadProgressBar: ProgressBar
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -68,65 +69,42 @@ class HomeFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("PersonImageUpload")
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("PersonImageUpload")
-
+        mStorageRef = FirebaseStorage.getInstance().getReference("clothuploads")
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("clothuploads")
 
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater.inflate(R.layout.fragment_home, container, false)
-        pickButton = rootView.findViewById(R.id.button_gallery)
+        val rootView = inflater.inflate(R.layout.fragment_cloth_for_admin, container, false)
+//        pickButton = rootView.findViewById(R.id.button_gallery)
         pickButtonnew = rootView.findViewById(R.id.button_upload)
         btnCamera = rootView.findViewById(R.id.button_camera)
 
         imgGallery = rootView.findViewById(R.id.imageView)
-        val btnGallery = rootView.findViewById<Button>(R.id.button_choose_file)
+        val btnGallery = rootView.findViewById<Button>(R.id.button_gallery)
 
         btnGallery.setOnClickListener {
             val iGallery = Intent(Intent.ACTION_PICK)
             iGallery.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             startActivityForResult(iGallery, Gallery_REQ_CODE)
         }
-        pickButton.setOnClickListener {
-            val fragmentB = ModelsFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, fragmentB)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+//        pickButton.setOnClickListener {
+//            val fragmentB = ModelsFragment()
+//            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+//            transaction.replace(R.id.fragment_container, fragmentB)
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+//        }
 
         btnCamera.setOnClickListener {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
         }
 
-
-//        pickButtonnew.setOnClickListener {
-//            val uploadCoroutine = CoroutineScope(Dispatchers.Main)
-//            uploadCoroutine.launch {
-//
-//                val uploadedURI = uploadFile()
-//                uploadCoroutine.cancel()
-//                if(uploadedURI != null){
-//                    sharedViewModel.personImageURL = uploadedURI
-//                    val fragmentB = ClothFragment()
-//                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
-//                    transaction.replace(R.id.fragment_container, fragmentB)
-//                    transaction.addToBackStack(null)
-//                    transaction.commit()
-//                }else{
-//                    Toast.makeText(context,"Could not upload your image",Toast.LENGTH_LONG).show()
-//                }
-//            }
-//        }
-//
-//        return rootView
         // Initialize the ProgressBar
         uploadProgressBar = rootView.findViewById(R.id.progressBar)
 
@@ -143,7 +121,7 @@ class HomeFragment : Fragment() {
                 uploadProgressBar.visibility = View.GONE
 
                 if (uploadedURI != null) {
-                    sharedViewModel.personImageURL = uploadedURI
+                    //sharedViewModel.personImageURL = uploadedURI
                     val fragmentB = ClothFragment()
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.replace(R.id.fragment_container, fragmentB)
@@ -165,12 +143,12 @@ class HomeFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
+         * @return A new instance of fragment ClothFragmentForAdmin.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
+            ClothUploadForAdmin().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -21,7 +21,6 @@
         android:text="Virtual Try On Result"
         android:textAlignment="center"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageViewInTryOutResultFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,27 +31,37 @@
         android:layout_height="150dp"
         android:layout_below="@+id/textView"
         android:layout_marginStart="12dp"
+        android:layout_marginTop="88dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="49dp"
         android:maxHeight="350dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@android:drawable/alert_light_frame" />
 
-    <ImageView
-        android:id="@+id/clothImageViewInTryOutResultFragment"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_below="@+id/textView"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="49dp"
-        android:maxHeight="350dp"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progressTint="@color/white"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/personImageViewInTryOutResultFragment"
+        app:layout_constraintEnd_toEndOf="@+id/personImageViewInTryOutResultFragment"
+        app:layout_constraintStart_toStartOf="@+id/personImageViewInTryOutResultFragment"
+        app:layout_constraintTop_toTopOf="@+id/personImageViewInTryOutResultFragment" />
+
+    <Button
+        android:id="@+id/savegallery"
+        android:layout_width="189dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="88dp"
+        android:text="Download image"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/personImageViewInTryOutResultFragment"
-        app:srcCompat="@android:drawable/alert_light_frame" />
-
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

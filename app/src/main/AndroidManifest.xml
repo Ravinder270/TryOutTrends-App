@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -14,9 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.VirtualTryOn"
         tools:targetApi="31">
-        <activity
-            android:name=".ModelsPhotoPick"
-            android:exported="false" />
+
         <activity
             android:name=".SignUpActivity"
             android:exported="false"
@@ -24,32 +24,28 @@
         <activity
             android:name=".SignInActivity"
             android:exported="true"
-            android:theme="@style/Base.Theme.VirtualTryOn">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Base.Theme.VirtualTryOn"/>
         <activity
             android:name=".TryOutResult"
             android:exported="false" />
-        <activity
-            android:name=".Pickacloth"
-            android:exported="false" />
+
         <activity
             android:name=".ClothImageupload"
             android:exported="false" />
-        <activity
-            android:name=".PickAnImage"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/SplashTheme" />
-    </application>
+            android:theme="@style/SplashTheme" >
+            <intent-filter>
+                               <action android:name="android.intent.action.MAIN" />
 
-</manifest>
+                                <category android:name="android.intent.category.LAUNCHER" />
+                            </intent-filter>
+                        </activity>
+                    </application>
+
+                </manifest>

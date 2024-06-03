@@ -41,8 +41,10 @@ class SaveFragment : Fragment() {
 
     val sharedViewModel: SharedViewModel by activityViewModels()
     private var recyclerView: RecyclerView? = null
-    private var recyclerViewMovieAdapter: RecyclerViewAdapterForSavedImages? = null
-    private var movieList: List<Movie>? = listOf<Movie>()
+    private var recyclerviewImageAdapter: RecyclerViewAdapterForSavedImages? = null
+    private var imageList: List<Models>? = listOf<Models>()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,32 +61,38 @@ class SaveFragment : Fragment() {
         // Inflate the layout for this fragment
         val rootView = inflater.inflate(R.layout.fragment_save, container, false)
 
+
+
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
 
-            movieList = prepareMovieListData()
+
+            imageList = prepareImageListData()
+
+
             coroutineScope.cancel()
-            Log.d("result", "movie list : ${movieList.toString()}")
-            if (movieList != null) {
-                val recyclerView = rootView.findViewById<RecyclerView>(R.id.SavedMovieListsInModels)
-                recyclerViewMovieAdapter =
+            Log.d("result", "Image list : ${imageList.toString()}")
+            if (imageList != null) {
+                val recyclerView = rootView.findViewById<RecyclerView>(R.id.SavedImageListsInModels)
+                recyclerviewImageAdapter =
                     RecyclerViewAdapterForSavedImages(
                         fragment = this@SaveFragment,
-                        movieList!!
-                    ) { position ->
-                        sharedViewModel.clothImageURL = movieList!![position].image
-
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, TryOutResult()).commit()
+                        imageList!!
+                    ) {
+//                        position ->
+//                        sharedViewModel.clothImageURL = imageList!![position].image
+//
+//                        parentFragmentManager.beginTransaction()
+//                            .replace(R.id.fragment_container, TryOutResult()).commit()
                     }
                 val layoutManager: RecyclerView.LayoutManager =
                     GridLayoutManager(this@SaveFragment.requireContext(), 2)
                 recyclerView.layoutManager = layoutManager
-                recyclerView.adapter = recyclerViewMovieAdapter
+                recyclerView.adapter = recyclerviewImageAdapter
             } else {
                 Toast.makeText(
                     this@SaveFragment.requireContext(),
-                    "Movie list is null",
+                    "Image list is null",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -139,12 +147,12 @@ class SaveFragment : Fragment() {
 //            }
 //        }
 //    }
-    private suspend fun prepareMovieListData(): List<Movie>? {
+    private suspend fun prepareImageListData(): List<Models>? {
         // Assuming you have a reference to your Firebase database
         val auth = FirebaseAuth.getInstance()
         val userEmail = auth.currentUser?.email
         return suspendCoroutine { continuation ->
-            val list = arrayListOf<Movie>()
+            val list = arrayListOf<Models>()
             val databaseReference = FirebaseStorage.getInstance().reference.child("images/$userEmail")
             databaseReference.listAll().addOnSuccessListener { (items, prefixes) ->
                 for (prefix in prefixes) {
@@ -155,7 +163,7 @@ class SaveFragment : Fragment() {
                         val downloadUrl = item.downloadUrl.await()
                         if (downloadUrl != null) {
                             Log.d("downloadURL", "URL : $downloadUrl")
-                            Movie("Image", downloadUrl)
+                            Models("Image", downloadUrl)
                         } else {
                             null
                         }

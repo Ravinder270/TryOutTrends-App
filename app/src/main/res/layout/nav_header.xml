@@ -10,24 +10,30 @@
     android:background="@drawable/headerbkg"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/aklogowhite"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TryOutTrends"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        tools:ignore="HardcodedText" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="contact@tryouttrends.com"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:layout_marginBottom="16dp"
-        tools:ignore="HardcodedText" />
+    <!--
+   <ImageView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:src="@drawable/aklogowhite"/>
+    -->
+    <!--
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="TryOutTrends"
+           android:textSize="15sp"
+           android:textColor="@color/white"
+           android:textStyle="bold"
+           tools:ignore="HardcodedText" />
 
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="contact@tryouttrends.com"
+           android:textColor="@color/white"
+           android:textSize="14sp"
+           android:layout_marginBottom="16dp"
+           tools:ignore="HardcodedText" />
+
+       -->
 </LinearLayout>

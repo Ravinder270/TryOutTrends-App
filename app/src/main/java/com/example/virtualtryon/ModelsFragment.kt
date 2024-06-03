@@ -42,8 +42,8 @@ class ModelsFragment : Fragment() {
     private var param2: String? = null
     private val sharedViewModel:SharedViewModel by activityViewModels()
     private var recyclerView: RecyclerView? = null
-    private var recyclerViewMovieAdapter: RecyclerViewAdapterforPickancloth? = null
-    private var movieList: List<Movie>? = listOf<Movie>()
+    private var recyclerViewImageAdapter: RecyclerViewAdapterforModelsFragment? = null
+    private var imageList: List<Models>? = listOf<Models>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,24 +57,22 @@ class ModelsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-       // return inflater.inflate(R.layout.fragment_models, container, false)
-        val rootView = inflater.inflate(R.layout.fragment_models, container, false)
+       val rootView = inflater.inflate(R.layout.fragment_models, container, false)
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
 
-            movieList = prepareMovieListData()
+            imageList = prepareImageList()
             coroutineScope.cancel()
-            Log.d("result","movie list : ${movieList.toString()}")
-            if (movieList != null) {
-                val recyclerView = rootView.findViewById<RecyclerView>(R.id.rvMovieListsInModels)
-                recyclerViewMovieAdapter =
-                    RecyclerViewAdapterforPickancloth(
+            Log.d("result","Image list : ${imageList.toString()}")
+            if (imageList != null) {
+                val recyclerView = rootView.findViewById<RecyclerView>(R.id.rvImageListsInModels)
+                recyclerViewImageAdapter =
+                    RecyclerViewAdapterforModelsFragment(
                         fragment = this@ModelsFragment,
-                        movieList!!,
+                        imageList!!,
                         callback = {position->
-                            sharedViewModel.personImageURL =  movieList!![position].image
+                            sharedViewModel.personImageURL =  imageList!![position].image
 
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container, ClothFragment()).commit()
@@ -83,9 +81,9 @@ class ModelsFragment : Fragment() {
                 val layoutManager: RecyclerView.LayoutManager =
                     GridLayoutManager(this@ModelsFragment.requireContext(), 2)
                 recyclerView.layoutManager = layoutManager
-                recyclerView.adapter = recyclerViewMovieAdapter
+                recyclerView.adapter = recyclerViewImageAdapter
             } else {
-                Toast.makeText(this@ModelsFragment.requireContext(), "Movie list is null", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ModelsFragment.requireContext(), "Image list is null", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -111,10 +109,10 @@ class ModelsFragment : Fragment() {
                 }
             }
     }
-    private suspend fun prepareMovieListData(): List<Movie>? {
+    private suspend fun prepareImageList(): List<Models>? {
         // Assuming you have a reference to your Firebase database
         return suspendCoroutine { continuation ->
-            val list = arrayListOf<Movie>()
+            val list = arrayListOf<Models>()
             val databaseReference = FirebaseStorage.getInstance().reference.child("Models")
             databaseReference.listAll().addOnSuccessListener { (items, prefixes) ->
                 for (prefix in prefixes) {
@@ -125,7 +123,7 @@ class ModelsFragment : Fragment() {
                         val downloadUrl = item.downloadUrl.await()
                         if (downloadUrl != null) {
                             Log.d("downloadURL","URL : $downloadUrl")
-                            Movie("Image", downloadUrl)
+                            Models("Image", downloadUrl)
                         } else {
                             null
                         }

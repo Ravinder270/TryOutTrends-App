@@ -1,7 +1,5 @@
 package com.example.virtualtryon
 
-
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -27,14 +25,15 @@ class SignInActivity : AppCompatActivity() {
             }
 
             binding.button.setOnClickListener {
-                val email = binding.emailEt.text.toString()
-                val pass = binding.passET.text.toString()
+                val email = binding.username.text.toString()
+                val pass = binding.password.text.toString()
 
                 if (email.isNotEmpty() && pass.isNotEmpty()) {
 
                     firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                         if (it.isSuccessful) {
                             val intent = Intent(this, MainActivity::class.java)
+                            intent.putExtra("user_email", email)
                             startActivity(intent)
                         } else {
                             Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()

@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.component1
 import com.google.firebase.storage.component2
@@ -41,8 +43,12 @@ class ClothFragment : Fragment() {
     private var param2: String? = null
     val sharedViewModel: SharedViewModel by activityViewModels()
     private var recyclerView: RecyclerView? = null
-    private var recyclerViewMovieAdapter: RecyclerViewMovieAdapter? = null
-    private var movieList: List<Movie>? = listOf<Movie>()
+    private var recyclerViewImageAdapter: RecyclerViewImageAdapter? = null
+    private var imageList: List<Models>? = listOf<Models>()
+    private lateinit var progressBar: ProgressBar
+    private var isAdmin: Boolean = false
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,42 +56,63 @@ class ClothFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        //val auth = FirebaseAuth.getInstance()
+//        if(auth.currentUser != null){
+//            Log.d("tryOut","Email : ${auth.currentUser!!.email.toString()}")
+//            Toast.makeText(requireContext(),"Current user : ${auth.currentUser!!.email.toString()}",Toast.LENGTH_LONG).show()
+//        }
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        currentUser?.let {
+            isAdmin = it.email == "admin123@gmail.com"
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_cloth, container, false)
+
         val rootView = inflater.inflate(R.layout.fragment_models, container, false)
+        progressBar = rootView.findViewById(R.id.progressBar)
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
 
-            movieList = prepareMovieListData()
-            coroutineScope.cancel()
-            Log.d("result", "movie list : ${movieList.toString()}")
-            if (movieList != null) {
-                val recyclerView = rootView.findViewById<RecyclerView>(R.id.rvMovieListsInModels)
-                recyclerViewMovieAdapter =
-                    RecyclerViewMovieAdapter(
-                        fragment = this@ClothFragment,
-                        movieList!!
-                    ){position->
-                        sharedViewModel.clothImageURL = movieList!![position].image
+            progressBar.visibility = View.VISIBLE // Show the ProgressBar while loading
 
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, TryOutResult()).commit()
+            imageList = prepareImageListData()
+
+            progressBar.visibility = View.GONE // Hide the ProgressBar after loading
+
+            coroutineScope.cancel()
+            Log.d("result", "Image list : ${imageList.toString()}")
+            if (imageList != null) {
+                val recyclerView = rootView.findViewById<RecyclerView>(R.id.rvImageListsInModels)
+                recyclerViewImageAdapter =
+                    RecyclerViewImageAdapter(
+                        fragment = this@ClothFragment,
+                        imageList!!
+                    ){position->
+//                        sharedViewModel.clothImageURL = imageList!![position].image
+//
+//                        parentFragmentManager.beginTransaction()
+//                            .replace(R.id.fragment_container, TryOutResult()).commit()
+                        if (isAdmin) {
+                            //Toast.makeText(this@ClothFragment.requireContext(), "image", Toast.LENGTH_SHORT).show()
+                        } else {
+                            sharedViewModel.clothImageURL = imageList!![position].image
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, TryOutResult()).commit()
+                        }
                     }
                 val layoutManager: RecyclerView.LayoutManager =
                     GridLayoutManager(this@ClothFragment.requireContext(), 2)
                 recyclerView.layoutManager = layoutManager
-                recyclerView.adapter = recyclerViewMovieAdapter
+                recyclerView.adapter = recyclerViewImageAdapter
             } else {
                 Toast.makeText(
                     this@ClothFragment.requireContext(),
-                    "Movie list is null",
+                    "Image list is null",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -114,10 +141,10 @@ class ClothFragment : Fragment() {
             }
     }
 
-    private suspend fun prepareMovieListData(): List<Movie>? {
+    private suspend fun prepareImageListData(): List<Models>? {
         // Assuming you have a reference to your Firebase database
         return suspendCoroutine { continuation ->
-            val list = arrayListOf<Movie>()
+            val list = arrayListOf<Models>()
             val databaseReference = FirebaseStorage.getInstance().reference.child("clothuploads")
             databaseReference.listAll().addOnSuccessListener { (items, prefixes) ->
                 for (prefix in prefixes) {
@@ -128,7 +155,7 @@ class ClothFragment : Fragment() {
                         val downloadUrl = item.downloadUrl.await()
                         if (downloadUrl != null) {
                             Log.d("downloadURL", "URL : $downloadUrl")
-                            Movie("Image", downloadUrl)
+                            Models("Image", downloadUrl)
                         } else {
                             null
                         }
